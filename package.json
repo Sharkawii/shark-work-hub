@@ -1,0 +1,20 @@
+{
+  "name": "work_hub",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mssql": "^12.2.0",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.1"
+  }
+}

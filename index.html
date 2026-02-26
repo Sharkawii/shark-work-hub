@@ -1,0 +1,573 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shark Work Hub</title>
+
+  <!-- Minimal fonts (system) -->
+  <style>
+    :root{
+      --bg:#071021;
+      --surface:#0B1B33;
+      --surface2:#0A1730;
+      --border:#143055;
+      --primary:#1DA1FF;
+      --primaryDark:#0B4DB8;
+      --accent:#22D3EE;
+      --text:#EAF2FF;
+      --muted:#9DB2D0;
+      --danger:#EF4444;
+      --warn:#F59E0B;
+      --ok:#22C55E;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(29,161,255,.18), transparent 60%),
+                  radial-gradient(800px 500px at 80% 10%, rgba(34,211,238,.12), transparent 50%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .app{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      min-height:100vh;
+    }
+    .sidebar{
+      border-right:1px solid rgba(20,48,85,.7);
+      background: linear-gradient(180deg, rgba(11,27,51,.95), rgba(7,16,33,.85));
+      padding:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; padding:10px 10px 16px;
+    }
+    .brand img{width:46px; height:46px; border-radius:10px; object-fit:cover; box-shadow:0 0 0 1px rgba(20,48,85,.8)}
+    .brand .t1{font-weight:800; letter-spacing:.4px}
+    .brand .t2{color:var(--muted); font-size:12px; margin-top:2px}
+    .nav{margin-top:8px}
+    .nav a{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 12px; margin:6px 0;
+      border-radius:10px;
+      color:var(--muted);
+      border:1px solid transparent;
+    }
+    .nav a.active{
+      background:rgba(29,161,255,.10);
+      border-color:rgba(29,161,255,.25);
+      color:var(--text);
+    }
+    .badge{
+      font-size:12px; padding:2px 8px; border-radius:999px;
+      background:rgba(157,178,208,.12); color:var(--muted);
+      border:1px solid rgba(20,48,85,.8);
+    }
+
+    .main{
+      padding:22px 22px 40px;
+    }
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .search{
+      flex:1;
+      display:flex; gap:10px; align-items:center;
+      background:rgba(11,27,51,.8);
+      border:1px solid rgba(20,48,85,.9);
+      border-radius:999px;
+      padding:10px 12px;
+      max-width:680px;
+    }
+    .search input{
+      width:100%;
+      background:transparent; border:none; outline:none;
+      color:var(--text);
+      font-size:14px;
+    }
+    .btn{
+      border:none; cursor:pointer;
+      border-radius:10px;
+      padding:10px 12px;
+      font-weight:700;
+      background:rgba(29,161,255,.14);
+      color:var(--text);
+      border:1px solid rgba(29,161,255,.28);
+    }
+    .btn:hover{background:rgba(29,161,255,.20)}
+    .btn.primary{
+      background:linear-gradient(180deg, rgba(29,161,255,.95), rgba(11,77,184,.85));
+      border:1px solid rgba(29,161,255,.45);
+    }
+    .btn.ghost{
+      background:transparent;
+      border:1px solid rgba(20,48,85,.9);
+      color:var(--muted);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    .card{
+      background:rgba(11,27,51,.82);
+      border:1px solid rgba(20,48,85,.85);
+      border-radius:var(--radius);
+      padding:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+    .card h3{
+      margin:0 0 10px;
+      font-size:14px; color:var(--muted); font-weight:800;
+      letter-spacing:.3px;
+    }
+    .list{display:flex; flex-direction:column; gap:10px}
+    .row{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      padding:12px; border-radius:12px;
+      background:rgba(10,23,48,.65);
+      border:1px solid rgba(20,48,85,.65);
+    }
+    .row .title{font-weight:800}
+    .row .meta{color:var(--muted); font-size:12px; margin-top:4px}
+    .pill{
+      font-size:12px; padding:3px 10px; border-radius:999px;
+      border:1px solid rgba(20,48,85,.9);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .pill.blue{border-color:rgba(29,161,255,.45); color:rgba(29,161,255,.95); background:rgba(29,161,255,.10)}
+    .pill.red{border-color:rgba(239,68,68,.45); color:rgba(239,68,68,.95); background:rgba(239,68,68,.10)}
+    .pill.green{border-color:rgba(34,197,94,.45); color:rgba(34,197,94,.95); background:rgba(34,197,94,.10)}
+    .pill.amber{border-color:rgba(245,158,11,.45); color:rgba(245,158,11,.95); background:rgba(245,158,11,.10)}
+    .stars{cursor:pointer; user-select:none}
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0 10px;
+    }
+    th{
+      text-align:left;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      padding:0 10px;
+    }
+    td{
+      padding:12px 10px;
+      background:rgba(10,23,48,.65);
+      border-top:1px solid rgba(20,48,85,.65);
+      border-bottom:1px solid rgba(20,48,85,.65);
+    }
+    td:first-child{
+      border-left:1px solid rgba(20,48,85,.65);
+      border-top-left-radius:12px;
+      border-bottom-left-radius:12px;
+    }
+    td:last-child{
+      border-right:1px solid rgba(20,48,85,.65);
+      border-top-right-radius:12px;
+      border-bottom-right-radius:12px;
+    }
+    .actions{display:flex; gap:8px; justify-content:flex-end}
+    .link{
+      cursor:pointer;
+      color:rgba(29,161,255,.95);
+      font-weight:800;
+    }
+    .muted{color:var(--muted)}
+    .hint{font-size:12px; color:var(--muted); margin-top:8px}
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0; display:none;
+      background:rgba(0,0,0,.55);
+      align-items:center; justify-content:center;
+      padding:18px;
+    }
+    .modal.show{display:flex}
+    .modal .box{
+      width:min(820px, 100%);
+      background:rgba(11,27,51,.96);
+      border:1px solid rgba(20,48,85,.95);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    .modal .head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px}
+    .modal .head h2{margin:0; font-size:16px}
+    .x{cursor:pointer; color:var(--muted); font-weight:900; padding:6px 10px; border-radius:10px; border:1px solid rgba(20,48,85,.9)}
+    .x:hover{color:var(--text)}
+    .form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .field{
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .field label{font-size:12px; color:var(--muted); font-weight:800}
+    .field input, .field select, .field textarea{
+      background:rgba(10,23,48,.8);
+      border:1px solid rgba(20,48,85,.9);
+      border-radius:12px;
+      padding:10px 10px;
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .field textarea{min-height:110px; resize:vertical}
+    .span2{grid-column:1 / -1}
+    .footer{
+      display:flex; justify-content:flex-end; gap:10px; margin-top:12px;
+    }
+
+    @media(max-width:980px){
+      .app{grid-template-columns: 1fr}
+      .sidebar{display:none}
+      .grid{grid-template-columns:1fr}
+    }
+    .menuItem{
+    padding:12px 12px;
+    cursor:pointer;
+    font-weight:800;
+    color:var(--text);
+    border-bottom:1px solid rgba(20,48,85,.7);
+    background:rgba(10,23,48,.40);
+  }
+  .menuItem:last-child{border-bottom:none}
+  .menuItem:hover{background:rgba(29,161,255,.14)}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <!-- Put your logo file in same folder and name it logo.jpg OR replace src -->
+        <img src="logo.jpeg" alt="SharkIT Logo" onerror="this.style.display='none'"/>
+        <div>
+          <div class="t1">Shark Work Hub</div>
+          <div class="t2">Minimal Blue • Personal OS</div>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <a href="#" data-view="dashboard" class="active">Dashboard <span class="badge" id="badgeAll">0</span></a>
+        <a href="#" data-view="projects">Projects <span class="badge" id="badgeProjects">0</span></a>
+        <a href="#" data-view="tasks">Tasks <span class="badge" id="badgeTasks">0</span></a>
+        <a href="#" data-view="discussions">Discussions <span class="badge" id="badgeDiscussions">0</span></a>
+        <a href="#" data-view="important">Important ⭐ <span class="badge" id="badgeImportant">0</span></a>
+        <a href="#" data-view="today">Today <span class="badge" id="badgeToday">0</span></a>
+        <a href="#" data-view="overdue">Overdue <span class="badge" id="badgeOverdue">0</span></a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="search">
+          <span class="muted">🔎</span>
+          <input id="searchInput" placeholder="Search tasks, notes, ideas..." />
+        </div>
+            <div style="display:flex; gap:10px; position:relative;">
+                <button class="btn primary" id="btnNew">+ New</button>
+
+                <div id="newMenu" style="
+                    position:absolute; right:0; top:44px;
+                    display:none; min-width:190px;
+                    background:rgba(11,27,51,.98);
+                    border:1px solid rgba(20,48,85,.95);
+                    border-radius:12px;
+                    overflow:hidden;
+                    box-shadow:0 20px 60px rgba(0,0,0,.35);
+                    z-index:999;
+                ">
+                    <div class="menuItem" data-action="newProject">New Project</div>
+                    <div class="menuItem" data-action="newTask">New Task</div>
+                    <div class="menuItem" data-action="newDiscussion">New Discussion</div>
+                </div>
+            </div>
+      </div>
+
+      <div id="viewTitle" class="muted" style="font-weight:900; letter-spacing:.3px;">Dashboard</div>
+
+      <section id="dashboardView" class="grid">
+        <div class="card">
+          <h3>Upcoming (7 days)</h3>
+          <div class="list" id="upcomingList"></div>
+        </div>
+
+        <div class="card">
+          <h3>Overdue</h3>
+          <div class="list" id="overdueList"></div>
+        </div>
+
+        <div class="card">
+          <h3>Important ⭐</h3>
+          <div class="list" id="importantList"></div>
+        </div>
+
+        <div class="card">
+          <h3>Projects</h3>
+          <div class="list" id="projectsMiniList"></div>
+        </div>
+      </section>
+
+      <section id="projectsView" class="card" style="display:none;">
+        <h3>Projects</h3>
+        <div class="hint">Click project name to filter tasks by project.</div>
+        <div style="margin-top:10px; overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Target</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="discussionsView" class="card" style="display:none;">
+  <h3>Discussions</h3>
+  <div class="hint">Open / Closed • Follow-up • Important ⭐</div>
+
+  <div style="margin-top:10px; overflow:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>⭐</th>
+          <th>Title</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Follow-up</th>
+          <th style="text-align:right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="discussionsTable"></tbody>
+    </table>
+  </div>
+</section>
+
+      <section id="tasksView" class="card" style="display:none;">
+        <h3>Tasks</h3>
+        <div class="hint">Filters: status / priority / due views from sidebar.</div>
+        <div style="margin-top:10px; overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>⭐</th>
+                <th>Task</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Deadline</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tasksTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Project Modal -->
+  <div class="modal" id="projectModal">
+    <div class="box">
+      <div class="head">
+        <h2 id="projectModalTitle">New Project</h2>
+        <div class="x" id="closeProjectModal">✕</div>
+      </div>
+
+      <div class="form">
+        <div class="field">
+          <label>Project Name</label>
+          <input id="pName" placeholder="e.g. Central Monitor, AI CCTV..." />
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="pStatus">
+            <option>Active</option>
+            <option>On Hold</option>
+            <option>Done</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Start Date</label>
+          <input id="pStart" type="datetime-local" />
+        </div>
+        <div class="field">
+          <label>Target Date</label>
+          <input id="pTarget" type="datetime-local" />
+        </div>
+        <div class="field span2">
+          <label>Description</label>
+          <textarea id="pDesc" placeholder="Short description..."></textarea>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="btn ghost" id="pDeleteBtn" style="display:none;">Delete</button>
+        <button class="btn" id="pCancelBtn">Cancel</button>
+        <button class="btn primary" id="pSaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Modal -->
+  <div class="modal" id="taskModal">
+    <div class="box">
+      <div class="head">
+        <h2 id="taskModalTitle">New Task</h2>
+        <div class="x" id="closeTaskModal">✕</div>
+      </div>
+
+      <div class="form">
+        <div class="field span2">
+          <label>Projects (optional)</label>
+          <select id="tProjects" multiple></select>
+          <div class="hint">اختار مشروع أو أكتر (Ctrl + Click). لو سبتها فاضية: Task مستقلة.</div>
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <select id="tStatus">
+            <option>Pending</option>
+            <option>In Progress</option>
+            <option>Blocked</option>
+            <option>Done</option>
+          </select>
+        </div>
+
+        <div class="field span2">
+          <label>Title</label>
+          <input id="tTitle" placeholder="Task title..." />
+        </div>
+
+        <div class="field span2">
+          <label>Description</label>
+          <textarea id="tDesc" placeholder="What needs to be done?"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Priority</label>
+          <select id="tPriority">
+            <option>Low</option>
+            <option selected>Medium</option>
+            <option>High</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Deadline</label>
+          <input id="tDeadline" type="datetime-local" />
+        </div>
+
+        <div class="field span2">
+          <label>Notes</label>
+          <textarea id="tNotes" placeholder="Notes..."></textarea>
+        </div>
+
+        <div class="field span2">
+          <label>Ideas</label>
+          <textarea id="tIdeas" placeholder="Ideas related to this task..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Important ⭐</label>
+          <select id="tImportant">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Email Reminder</label>
+          <select id="tEmailReminder">
+            <option value="1">Enabled</option>
+            <option value="0">Disabled</option>
+          </select>
+        </div>
+
+        <div class="field span2">
+          <label>Custom Alert Time (optional)</label>
+          <input id="tCustomAlert" type="datetime-local" />
+          <div class="hint">لو حطيت وقت هنا، السيستم هيبعت Reminder في الوقت ده (حتى لو الديدلاين بعيد).</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button class="btn ghost" id="tDeleteBtn" style="display:none;">Delete</button>
+        <button class="btn" id="tCancelBtn">Cancel</button>
+        <button class="btn primary" id="tSaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+<!-- Discussion Modal -->
+<div class="modal" id="discussionModal">
+  <div class="box">
+    <div class="head">
+      <h2 id="discussionModalTitle">New Discussion</h2>
+      <div class="x" id="closeDiscussionModal">✕</div>
+    </div>
+
+    <div class="form">
+      <div class="field span2">
+        <label>Title</label>
+        <input id="dTitle" placeholder="Discussion title..." />
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        <select id="dStatus">
+          <option>Open</option>
+          <option>Closed</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Related Project (optional)</label>
+        <select id="dProject">
+          <option value="">-- None --</option>
+        </select>
+      </div>
+
+      <div class="field span2">
+        <label>Content / Notes</label>
+        <textarea id="dContent" placeholder="Write the discussion details..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Follow-up time (optional)</label>
+        <input id="dFollowUp" type="datetime-local" />
+      </div>
+
+      <div class="field">
+        <label>Important ⭐</label>
+        <select id="dImportant">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="btn ghost" id="dDeleteBtn" style="display:none;">Delete</button>
+      <button class="btn" id="dCancelBtn">Cancel</button>
+      <button class="btn primary" id="dSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
