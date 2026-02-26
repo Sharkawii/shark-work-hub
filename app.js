@@ -21,12 +21,15 @@ async function tempLoginIfNeeded() {
   const { data } = await supabase.auth.getSession();
   if (data?.session) return;
 
-  // ✳️ عدّل دول بنفسك مؤقتًا
-  const email = "Mohamedsharkawy383@gmail.com";
-  const password = "M@S@1999";
+  const { error } = await supabase.auth.signInWithPassword({
+    email: "mohamedsharkawy383@gmail.com ",
+    password: "M@S@1999"
+  });
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
+  if (error) {
+    console.error(error);
+    alert("Login failed: " + error.message);
+  }
 }
 
 // ---------- Projects ----------
